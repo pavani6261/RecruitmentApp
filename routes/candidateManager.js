@@ -279,7 +279,7 @@ const emailId=req.body.emailId;
   {
     await sql.open(details.connectionString, async (err, conn)=>{
     await  conn.query(`select * from Candidates  where EmailId='${emailId}'`,(err, data)=>{
-        if(data){
+        if(data.length!=0){
           var canId=data[0].canId;
           sql.open(details.connectionString, async (err, conn)=>{
             await  conn.query(`select * from CandidateSkills  where canId=${canId}`,(err, val)=>{
@@ -320,6 +320,13 @@ const emailId=req.body.emailId;
               })
               })
         }
+      else{
+        const result={
+            "status":"not found",
+            "message":"no record found"
+          }
+          res.send(result);
+      }
         if(err){
           console.log(err);
           res.send(err);
